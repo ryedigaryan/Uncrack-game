@@ -10,7 +10,7 @@ public class TestUserDraw : MonoBehaviour
     public RectTransform drawPanel;
     public GameObject cementPrefab;
     public Rect cementRect;
-    
+
     public List<LineRenderer> crackLines;
     private List<LineRenderer> cementLines;
     private LinkedList<Vector3> crackPoints;
@@ -19,9 +19,8 @@ public class TestUserDraw : MonoBehaviour
 
     private void Start()
     {
-        
     }
-    
+
     public float checksPerSecond = 2;
     public float maxCheckTimeSeconds;
 
@@ -31,6 +30,7 @@ public class TestUserDraw : MonoBehaviour
 
     private int total;
     public float winPercentThreshold;
+
     void Update()
     {
         if (!runCheck)
@@ -44,14 +44,14 @@ public class TestUserDraw : MonoBehaviour
             LevelLost(LostCause.NOT_ENOUGH_CEMENT);
             return;
         }
-        
-            int nextChecksCount = (int) (elapsed / checksPerSecond);
+
+        int nextChecksCount = (int) (elapsed / checksPerSecond);
         Debug.Log("elased: " + elapsed);
         Debug.Log("nextChecksCount: " + nextChecksCount);
 
-        for (int i = currentChecksCount; 
-                currentCementPointNode != null && i < nextChecksCount; 
-                currentCementPointNode = currentCementPointNode.Next, i++)
+        for (int i = currentChecksCount;
+            currentCementPointNode != null && i < nextChecksCount;
+            currentCementPointNode = currentCementPointNode.Next, i++)
         {
             var cementPoint = currentCementPointNode.Value;
             CreateCementAt(cementPoint);
@@ -139,14 +139,14 @@ public class TestUserDraw : MonoBehaviour
         elapsed = 0F;
         total = crackPoints.Count;
         InterpolateCementPoints();
-        
+
         currentCementPointNode = cementPoints.First;
     }
 
     private void InterpolateCementPoints()
     {
         var r = drawPanel.rect;
-        for(var n = cementPoints.First; n != null; n = n.Next)
+        for (var n = cementPoints.First; n != null; n = n.Next)
         {
             n.Value = (n.Value - new Vector3(r.width / 2, 0)) * 2;
         }
@@ -179,7 +179,7 @@ public class TestUserDraw : MonoBehaviour
             linePoints[i] = p;
         }
 
-        
+
         return linePoints;
     }
 }
