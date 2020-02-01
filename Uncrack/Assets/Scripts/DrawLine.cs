@@ -61,10 +61,14 @@ public class DrawLine : MonoBehaviour
 
     private bool isInsideDrawPanel(Vector2 point)
     {
+
+        // Debug.Log("point: " + point);
+        
         var r = drawPanel.rect;
-        return point.x > r.x &&
-               point.x < r.x + r.width &&
-               point.y < r.y + r.height / 2 &&
-               point.y > r.y - r.height / 2;
+        // Debug.Log("r: " + r);
+        return point.x > -r.width/2 &&
+               point.x < 0 &&
+               point.y < 0 &&
+               point.y > -r.height/2 ;
     }
 }

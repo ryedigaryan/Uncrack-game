@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class TestUserDraw : MonoBehaviour
 {
+    public Canvas canvas;
     public RectTransform drawPanel;
     public GameObject cementPrefab;
     public Rect cementRect;
@@ -19,6 +20,7 @@ public class TestUserDraw : MonoBehaviour
 
     private void Start()
     {
+        _camera = Camera.main;
     }
 
     public float checksPerSecond = 2;
@@ -30,6 +32,7 @@ public class TestUserDraw : MonoBehaviour
 
     private int total;
     public float winPercentThreshold;
+    private Camera _camera;
 
     void Update()
     {
@@ -46,15 +49,22 @@ public class TestUserDraw : MonoBehaviour
         }
 
         int nextChecksCount = (int) (elapsed / checksPerSecond);
-        Debug.Log("elased: " + elapsed);
-        Debug.Log("nextChecksCount: " + nextChecksCount);
+        // Debug.Log("elased: " + elapsed);
+        // Debug.Log("nextChecksCount: " + nextChecksCount);
 
         for (int i = currentChecksCount;
             currentCementPointNode != null && i < nextChecksCount;
             currentCementPointNode = currentCementPointNode.Next, i++)
         {
             var cementPoint = currentCementPointNode.Value;
-            CreateCementAt(cementPoint);
+            cementPoint.z = 1;
+            var r = drawPanel.rect;
+            var leftBot = _camera.ScreenToWorldPoint(new Vector3(-r.width / 2, -r.height / 2));
+            var rightTop = _camera.ScreenToWorldPoint(new Vector3(0, 0));
+            Debug.Log("lBot: " + leftBot);
+            Debug.Log("rTop: " + rightTop);
+            var offset = rightTop - leftBot;
+            CreateCementAt(cementPoint + 2 * offset);
             RemoveCrackPoint(cementPoint);
         }
 
@@ -138,17 +148,44 @@ public class TestUserDraw : MonoBehaviour
         runCheck = true;
         elapsed = 0F;
         total = crackPoints.Count;
-        InterpolateCementPoints();
 
+        ConvertToWorldPoint(crackPoints);
+        // printCementAndCrackPoints();
+        InterpolateCementPoints();
+        // printCementAndCrackPoints();
         currentCementPointNode = cementPoints.First;
+    }
+
+    private void ConvertToWorldPoint(LinkedList<Vector3> list)
+    {
+        for (var n = list.First; n != null; n = n.Next)
+        {
+            n.Value = _camera.ScreenToWorldPoint(n.Value);
+        }
     }
 
     private void InterpolateCementPoints()
     {
-        var r = drawPanel.rect;
         for (var n = cementPoints.First; n != null; n = n.Next)
         {
-            n.Value = (n.Value - new Vector3(r.width / 2, 0)) * 2;
+            n.Value *= 2;
+        }
+    }
+
+    private void printCementAndCrackPoints()
+    {
+        Debug.Log("drawPanelRect size: " + drawPanel.rect.size);
+        
+        Debug.Log("cement");
+        foreach (var p in cementPoints)
+        {
+            Debug.Log(p.ToString());
+        }
+
+        Debug.Log("crack");
+        foreach (var p in crackPoints)
+        {
+            Debug.Log(p.ToString());
         }
     }
 
@@ -181,5 +218,10 @@ public class TestUserDraw : MonoBehaviour
 
 
         return linePoints;
+    }
+
+    public void doneClick()
+    {
+        OnMouseDown();
     }
 }
