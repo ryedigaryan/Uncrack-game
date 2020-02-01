@@ -213,8 +213,8 @@ GameObject:
   m_Component:
   - component: {fileID: 878123397}
   - component: {fileID: 878123396}
-  - component: {fileID: 878123399}
   - component: {fileID: 878123398}
+  - component: {fileID: 878123399}
   m_Layer: 0
   m_Name: DoneButton
   m_TagString: Untagged
@@ -297,26 +297,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0763af5f90f04574c904da6d873131a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cementPrefab: {fileID: 0}
+  drawPanel: {fileID: 2130012757}
+  cementPrefab: {fileID: 3239351957475811227, guid: c8c9c0266051a644dba9f2f4f47b975f,
+    type: 3}
+  cementRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   crackLines: []
   checksPerSecond: 2
-  maxCheckTime: 0
-  winPercentThreshold: 0
---- !u!114 &878123399
-MonoBehaviour:
+  maxCheckTimeSeconds: 20
+  winPercentThreshold: 10
+--- !u!58 &878123399
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 878123395}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 2.56
 --- !u!1 &1001140088
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,8 +658,8 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.6, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.17909193, y: -2.4199004}
+  m_AnchoredPosition: {x: 0, y: -2.4199004}
   m_SizeDelta: {x: 17.86, y: 5.14}
   m_Pivot: {x: 0.5, y: 0.5}

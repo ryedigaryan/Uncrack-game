@@ -7,14 +7,15 @@ using UnityEngine;
 
 public class TestUserDraw : MonoBehaviour
 {
-    public RectTransform cementPrefab;
-
+    public RectTransform drawPanel;
+    public GameObject cementPrefab;
+    public Rect cementRect;
     
     public List<LineRenderer> crackLines;
-    private List<LineRenderer> userLines;
+    private List<LineRenderer> cementLines;
     private LinkedList<Vector3> crackPoints;
-    private LinkedList<Vector3> userPoints;
-    private LinkedListNode<Vector3> currentUserPointNode;
+    private LinkedList<Vector3> cementPoints;
+    private LinkedListNode<Vector3> currentCementPointNode;
 
     private void Start()
     {
@@ -22,13 +23,12 @@ public class TestUserDraw : MonoBehaviour
     }
     
     public float checksPerSecond = 2;
-    public float maxCheckTime;
+    public float maxCheckTimeSeconds;
 
     private int currentChecksCount;
     private bool runCheck;
     private float elapsed; // since check start
 
-    private int success;
     private int total;
     public float winPercentThreshold;
     void Update()
@@ -39,63 +39,117 @@ public class TestUserDraw : MonoBehaviour
         }
 
         elapsed += Time.deltaTime;
-        if (elapsed > maxCheckTime)
+        if (elapsed > maxCheckTimeSeconds)
         {
-            LevelLost();
+            LevelLost(LostCause.NOT_ENOUGH_CEMENT);
             return;
         }
         
-        int nextChecksCount = (int) (elapsed / checksPerSecond);
+            int nextChecksCount = (int) (elapsed / checksPerSecond);
+        Debug.Log("elased: " + elapsed);
+        Debug.Log("nextChecksCount: " + nextChecksCount);
 
         for (int i = currentChecksCount; 
-                currentUserPointNode != null && i < nextChecksCount; 
-                currentUserPointNode = currentUserPointNode.Next, i++)
+                currentCementPointNode != null && i < nextChecksCount; 
+                currentCementPointNode = currentCementPointNode.Next, i++)
         {
-            var userPoint = currentUserPointNode.Value;
-            CreateCementAt(userPoint);
-            if (RemoveCrackPoint(userPoint))
-            {
-                success++;
-            }
-            total++;
+            var cementPoint = currentCementPointNode.Value;
+            CreateCementAt(cementPoint);
+            RemoveCrackPoint(cementPoint);
         }
 
         currentChecksCount = nextChecksCount;
 
-        if (currentChecksCount > userPoints.Count)
+        if (currentCementPointNode == null) // all user drawn points are processed
         {
-            
+            runCheck = false;
+            if (crackPoints.Count == 0)
+            {
+                LevelWon();
+            }
+            else
+            {
+                CheckCementCoverage();
+            }
         }
     }
 
-    private bool RemoveCrackPoint(Vector3 userPoint)
+    private void CheckCementCoverage()
     {
-        return true;
+        float coveragePercent = 100 - (crackPoints.Count / (float) total * 100);
+        if (coveragePercent >= winPercentThreshold)
+        {
+            LevelWon();
+        }
+        else
+        {
+            LevelLost(LostCause.NOT_ENOUGH_COVERAGE);
+        }
     }
 
-    private void CreateCementAt(Vector3 userPoint)
+    private void LevelWon()
     {
-        throw new NotImplementedException();
+        Debug.Log("LEVEL WON");
     }
 
-    private void LevelLost()
+    private void RemoveCrackPoint(Vector3 cementPoint)
     {
-        Debug.Log("LEVEL LOST");
+        for (var n = crackPoints.First; n != null; n = n.Next)
+        {
+            if (cementIsOk(cementPoint, n.Value))
+            {
+                crackPoints.Remove(n);
+            }
+        }
+    }
+
+    private bool cementIsOk(Vector3 cementPosition, Vector3 crackPosition)
+    {
+        cementRect.x = cementPosition.x;
+        cementRect.y = cementPosition.y;
+        return cementRect.Contains(crackPosition);
+    }
+
+    private void CreateCementAt(Vector3 cementPoint)
+    {
+        Instantiate(cementPrefab, cementPoint, Quaternion.identity);
+    }
+
+
+    enum LostCause
+    {
+        NOT_ENOUGH_CEMENT,
+        NOT_ENOUGH_COVERAGE
+    }
+
+    private void LevelLost(LostCause cause)
+    {
+        Debug.Log($"LEVEL LOST {cause}");
     }
 
 
     private void OnMouseDown()
     {
-        userLines = DrawLine.drawnLines;
+        cementLines = DrawLine.drawnLines;
 
         crackPoints = extractPoints(crackLines);
-        userPoints = extractPoints(userLines);
+        cementPoints = extractPoints(cementLines);
         currentChecksCount = 0;
         runCheck = true;
         elapsed = 0F;
-        success = 0;
-        total = 0;
-        currentUserPointNode = userPoints.First;
+        total = crackPoints.Count;
+        InterpolateCementPoints();
+        
+        currentCementPointNode = cementPoints.First;
+    }
+
+    private void InterpolateCementPoints()
+    {
+        var r = drawPanel.rect;
+        for(var n = cementPoints.First; n != null; n = n.Next)
+        {
+            n.Value = (n.Value - new Vector3(r.width / 2, 0)) * 2;
+        }
     }
 
     LinkedList<Vector3> extractPoints(List<LineRenderer> lines)
