@@ -155,8 +155,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -128.7, y: 86}
-  m_SizeDelta: {x: 79.4, y: 56}
+  m_AnchoredPosition: {x: -127.9, y: 91.4}
+  m_SizeDelta: {x: 77.9, y: 66.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &112088727
 MonoBehaviour:
@@ -591,6 +591,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0763af5f90f04574c904da6d873131a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 0}
   drawPanel: {fileID: 2130012757}
   cementPrefab: {fileID: 3239351957475811227, guid: c8c9c0266051a644dba9f2f4f47b975f,
     type: 3}
@@ -820,6 +821,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0763af5f90f04574c904da6d873131a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 848292013}
   drawPanel: {fileID: 1170842199}
   cementPrefab: {fileID: 3239351957475811227, guid: c8c9c0266051a644dba9f2f4f47b975f,
     type: 3}
@@ -831,8 +833,8 @@ MonoBehaviour:
     height: 20
   crackLines:
   - {fileID: 2104419048}
-  checksPerSecond: 2
-  maxCheckTimeSeconds: 20
+  checksPerSecond: 0.01
+  maxCheckTimeSeconds: 200
   winPercentThreshold: 0
 --- !u!1 &2104419047
 GameObject:
