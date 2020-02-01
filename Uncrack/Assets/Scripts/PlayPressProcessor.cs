@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PlayPressProcessor : MonoBehaviour
+{
+    public GameObject ptObject;
+    public Image paintingTool;
+    public Image playDark;
+
+    private Vector2 ptStartPos;
+    
+    public void onPlayPress()
+    {
+        Debug.Log("enabled");
+        paintingTool.enabled = true;
+        ptStartPos = paintingTool.transform.position;
+    }
+
+    private float progress = 0;
+    private void Update()
+    {
+        if (progress >= 100)
+        {
+            return;
+        }
+        if (paintingTool.enabled)
+        {
+            progress += 200 * Time.deltaTime;
+            paintingTool.transform.position = (ptStartPos + (Vector2.right * (float) (5.5 * progress / 100)));
+            playDark.fillAmount = progress / 100;
+        }
+    }
+}

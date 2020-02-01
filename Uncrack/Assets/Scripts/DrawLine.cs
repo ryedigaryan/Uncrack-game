@@ -30,7 +30,7 @@ public class DrawLine : MonoBehaviour
         curentLineRenderer.SetPosition(1, fingerPositions[1]);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Vector2 newFingerPos = _camera.ScreenToWorldPoint(Input.mousePosition);
 
@@ -65,10 +65,11 @@ public class DrawLine : MonoBehaviour
         // Debug.Log("point: " + point);
         
         var r = drawPanel.rect;
+        r.position = _camera.ScreenToWorldPoint(r.position);
         // Debug.Log("r: " + r);
-        return point.x > -r.width/2 &&
-               point.x < 0 &&
-               point.y < 0 &&
-               point.y > -r.height/2 ;
+        return point.x > r.x/2 &&
+               point.x < -r.x/2 &&
+               point.y < -r.y/2 &&
+               point.y > r.y/2 ;
     }
 }

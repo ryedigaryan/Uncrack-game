@@ -34,7 +34,7 @@ public class TestUserDraw : MonoBehaviour
     public float winPercentThreshold;
     private Camera _camera;
 
-    void Update()
+    void FixedUpdate()
     {
         if (!runCheck)
         {
@@ -56,11 +56,12 @@ public class TestUserDraw : MonoBehaviour
         {
             var cementPoint = currentCementPointNode.Value;
             cementPoint.z = 1;
-            var r = drawPanelTransform.rect;
-            var leftBot = _camera.ScreenToWorldPoint(new Vector3(-r.width / 2, -r.height / 2));
-            var rightTop = _camera.ScreenToWorldPoint(new Vector3(0, 0));
-            var offset = rightTop - leftBot;
-            CreateCementAt(cementPoint + 2 * offset);
+            // var r = drawPanelTransform.rect;
+            // var leftBot = _camera.ScreenToWorldPoint(new Vector3(-r.width / 2, -r.height / 2));
+            // var rightTop = _camera.ScreenToWorldPoint(new Vector3(0, 0));
+            // var offset = rightTop - leftBot;
+            // CreateCementAt(cementPoint + 2 * offset);
+            CreateCementAt(cementPoint);
             RemoveCrackPoint(cementPoint);
         }
 
@@ -133,27 +134,6 @@ public class TestUserDraw : MonoBehaviour
         Debug.Log($"LEVEL LOST {cause}");
     }
 
-
-    private void OnMouseDown()
-    {
-        cementLines = DrawLine.drawnLines;
-
-        crackPoints = extractPoints(crackLines);
-        cementPoints = extractPoints(cementLines);
-        currentChecksCount = 0;
-        runCheck = true;
-        elapsed = 0F;
-        total = crackPoints.Count;
-
-        ConvertToWorldPoint(crackPoints);
-        // printCementAndCrackPoints();
-        InterpolateCementPoints();
-        // printCementAndCrackPoints();
-        currentCementPointNode = cementPoints.First;
-
-        PrepareCanvasForUnckracking();
-    }
-
     private void PrepareCanvasForUnckracking()
     {
         DestroyImageOnCanvas(drawPanelObject);
@@ -171,8 +151,8 @@ public class TestUserDraw : MonoBehaviour
 
     private void DestroyImageOnCanvas(GameObject go)
     {
-        Destroy(go.GetComponent<CanvasRenderer>());
         Destroy(go.GetComponent<Image>());
+        Destroy(go.GetComponent<CanvasRenderer>());
     }
 
     private void ConvertToWorldPoint(LinkedList<Vector3> list)
@@ -239,8 +219,23 @@ public class TestUserDraw : MonoBehaviour
         return linePoints;
     }
 
-    public void doneClick()
+    public void onUserDoneClick()
     {
-        OnMouseDown();
+        cementLines = DrawLine.drawnLines;
+
+        crackPoints = extractPoints(crackLines);
+        cementPoints = extractPoints(cementLines);
+        currentChecksCount = 0;
+        runCheck = true;
+        elapsed = 0F;
+        total = crackPoints.Count;
+
+        ConvertToWorldPoint(crackPoints);
+        // printCementAndCrackPoints();
+        InterpolateCementPoints();
+        // printCementAndCrackPoints();
+        currentCementPointNode = cementPoints.First;
+
+        PrepareCanvasForUnckracking();
     }
 }
