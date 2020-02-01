@@ -9,6 +9,8 @@ public class PlayPressProcessor : MonoBehaviour
     public GameObject ptObject;
     public Image paintingTool;
     public Image playDark;
+    public Canvas mainMenu;
+    public Canvas lvl1;
 
     private Vector2 ptStartPos;
     
@@ -24,6 +26,8 @@ public class PlayPressProcessor : MonoBehaviour
     {
         if (progress >= 100)
         {
+            mainMenu.gameObject.SetActive(false);
+            lvl1.gameObject.SetActive(true);
             return;
         }
         if (paintingTool.enabled)

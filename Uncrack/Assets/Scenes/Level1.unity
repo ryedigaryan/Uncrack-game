@@ -2241,6 +2241,8 @@ MonoBehaviour:
   ptObject: {fileID: 0}
   paintingTool: {fileID: 720657508}
   playDark: {fileID: 2130522731}
+  mainMenu: {fileID: 946866408}
+  lvl1: {fileID: 848292013}
 --- !u!114 &1665162542
 MonoBehaviour:
   m_ObjectHideFlags: 0
