@@ -14,6 +14,7 @@ public class TestUserDraw : MonoBehaviour
     private List<LineRenderer> userLines;
     private LinkedList<Vector3> crackPoints;
     private LinkedList<Vector3> userPoints;
+    private LinkedListNode<Vector3> currentUserPointNode;
 
     private void Start()
     {
@@ -46,11 +47,13 @@ public class TestUserDraw : MonoBehaviour
         
         int nextChecksCount = (int) (elapsed / checksPerSecond);
 
-        for (int i = currentChecksCount; i < nextChecksCount; i++)
+        for (int i = currentChecksCount; 
+                currentUserPointNode != null && i < nextChecksCount; 
+                currentUserPointNode = currentUserPointNode.Next, i++)
         {
-            var userPoint = userPoints.First.Value;
+            var userPoint = currentUserPointNode.Value;
             CreateCementAt(userPoint);
-            if (IsOnCrack(userPoint))
+            if (RemoveCrackPoint(userPoint))
             {
                 success++;
             }
@@ -65,9 +68,9 @@ public class TestUserDraw : MonoBehaviour
         }
     }
 
-    private bool IsOnCrack(Vector3 userPoint)
+    private bool RemoveCrackPoint(Vector3 userPoint)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private void CreateCementAt(Vector3 userPoint)
@@ -92,6 +95,7 @@ public class TestUserDraw : MonoBehaviour
         elapsed = 0F;
         success = 0;
         total = 0;
+        currentUserPointNode = userPoints.First;
     }
 
     LinkedList<Vector3> extractPoints(List<LineRenderer> lines)
