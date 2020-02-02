@@ -312,12 +312,12 @@ public class TestUserDraw : MonoBehaviour
         
         
         // bugaga
-        foreach (var c in crackPoints)
-        {
-            var go = Instantiate(linePrefab, c, Quaternion.identity);
-            go.name += "_CRACK";
-            cements.Add(go);
-        }
+        // foreach (var c in crackPoints)
+        // {
+        //     var go = Instantiate(linePrefab, c, Quaternion.identity);
+        //     go.name += "_CRACK";
+        //     cements.Add(go);
+        // }
         
         runCheck = true;
     }
