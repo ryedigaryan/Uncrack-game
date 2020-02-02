@@ -12,6 +12,7 @@ public class TestUserDraw : MonoBehaviour
     public GameObject doneButton;
     public float cementRadius = 8;
     public Image nextButton;
+    public Image shpaklee;
 
     public SpriteRenderer crackUI;
 
@@ -39,7 +40,7 @@ public class TestUserDraw : MonoBehaviour
     private Camera _camera;
     public Image restartLevel;
 
-    void FixedUpdate()
+    void Update()
     {
         if (!runCheck)
         {
@@ -61,11 +62,17 @@ public class TestUserDraw : MonoBehaviour
         {
             var cementPoint = currentCementPointNode.Value;
             cementPoint.z = 1;
-            // var r = drawPanelTransform.rect;
-            // var leftBot = _camera.ScreenToWorldPoint(new Vector3(-r.width / 2, -r.height / 2));
-            // var rightTop = _camera.ScreenToWorldPoint(new Vector3(0, 0));
-            // var offset = rightTop - leftBot;
-            // CreateCementAt(cementPoint + 2 * offset);
+            var shpakleePoint = cementPoint + new Vector3(0.5F, -0.5F);
+            if (i == 0)
+            {
+                // Debug.Log("shpaklee id: " + System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(shpaklee));
+                // Debug.Log("this id: " + System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(this));
+                ShowShpakleeAt(shpakleePoint);
+            }
+            else
+            {
+                MoveSpakleeTo(shpakleePoint);
+            }
             CreateCementAt(cementPoint);
             RemoveCrackPoint(cementPoint);
         }
@@ -86,6 +93,27 @@ public class TestUserDraw : MonoBehaviour
         }
     }
 
+    private void HideShpaklee()
+    {
+        // Debug.Log("Hide Shpaklee");
+        shpaklee.gameObject.SetActive(false);
+        shpaklee.enabled = false;
+    }
+
+    private void ShowShpakleeAt(Vector3 point)
+    {
+        // Debug.Log("Show Shpaklee");
+        shpaklee.gameObject.SetActive(true);
+        shpaklee.enabled = true;
+        shpaklee.transform.position = (Vector2) point;
+    }
+
+    private void MoveSpakleeTo(Vector3 point)
+    {
+        // Debug.Log("Move Shpaklee");
+        shpaklee.transform.position = (Vector2) point;
+    }
+
     private void CheckCementCoverage()
     {
         float coveragePercent = 100 - (crackPoints.Count / (float) total * 100);
@@ -103,7 +131,7 @@ public class TestUserDraw : MonoBehaviour
 
     private void LevelWon()
     {
-        Debug.Log("LEVEL WON");
+        OnLevelEnd();
         nextButton.gameObject.SetActive(true);
         nextButton.enabled = true;
     }
@@ -142,9 +170,15 @@ public class TestUserDraw : MonoBehaviour
         NOT_ENOUGH_COVERAGE
     }
 
+    private void OnLevelEnd()
+    {
+        HideShpaklee();
+    }
+    
     private void LevelLost(LostCause cause)
     {
-        Debug.Log($"LEVEL LOST {cause}");
+        OnLevelEnd();
+        Debug.Log("Lost: " + cause);
         restartLevel.gameObject.SetActive(true);
         restartLevel.enabled = true;
     }
@@ -260,5 +294,16 @@ public class TestUserDraw : MonoBehaviour
     {
         crackUI.gameObject.SetActive(true);
         crackUI.enabled = true;
+    }
+
+    
+    public static void cleanup()
+    {
+        foreach (var c in cements)
+        {
+            Destroy(c);
+        }
+
+        cements = new List<GameObject>();
     }
 }

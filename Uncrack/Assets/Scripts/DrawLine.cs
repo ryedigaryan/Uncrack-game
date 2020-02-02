@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class DrawLine : MonoBehaviour
 {
+    public static void cleanup()
+    {
+        drawnLines = new List<LineRenderer>();
+    }
+    
     public static List<LineRenderer> drawnLines = new List<LineRenderer>();
     private LineRenderer curentLineRenderer;
 
@@ -30,7 +35,7 @@ public class DrawLine : MonoBehaviour
         curentLineRenderer.SetPosition(1, fingerPositions[1]);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         Vector2 newFingerPos = _camera.ScreenToWorldPoint(Input.mousePosition);
 
@@ -47,7 +52,7 @@ public class DrawLine : MonoBehaviour
 
         if (curentLineRenderer != null && Input.GetMouseButton(0))
         {
-            // if (Vector2.Distance(newFingerPos, fingerPositions[fingerPositions.Count - 1]) > 0.1f)
+            if (Vector2.Distance(newFingerPos, fingerPositions[fingerPositions.Count - 1]) > 0.1f)
                 UpdateLine(newFingerPos);
         }
     }
