@@ -8,7 +8,7 @@ public class DrawLine : MonoBehaviour
 
     private GameObject currentLine;
     public RectTransform drawPanel;
-    private List<Vector2> fingerPositions;
+    private List<Vector2> fingerPositions = new List<Vector2>();
 
     public GameObject linePrefab;
     private Camera _camera;
@@ -45,9 +45,9 @@ public class DrawLine : MonoBehaviour
             drawnLines.Add(curentLineRenderer);
         }
 
-        if (Input.GetMouseButton(0))
+        if (curentLineRenderer != null && Input.GetMouseButton(0))
         {
-            if (Vector2.Distance(newFingerPos, fingerPositions[fingerPositions.Count - 1]) > 0.1f)
+            // if (Vector2.Distance(newFingerPos, fingerPositions[fingerPositions.Count - 1]) > 0.1f)
                 UpdateLine(newFingerPos);
         }
     }

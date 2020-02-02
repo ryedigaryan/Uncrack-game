@@ -4,12 +4,16 @@ using UnityEngine.UI;
 
 public class TestUserDraw : MonoBehaviour
 {
-    public Canvas canvas;
+    
     private RectTransform drawPanelTransform;
     public GameObject cementPrefab;
     public GameObject drawPanelObject;
+    public GameObject paperBackground;
     public GameObject doneButton;
-    public Rect cementRect;
+    public float cementRadius = 8;
+    public Image nextButton;
+
+    public SpriteRenderer crackUI;
 
     public List<LineRenderer> crackLines;
     private List<LineRenderer> cementLines;
@@ -33,6 +37,7 @@ public class TestUserDraw : MonoBehaviour
     private int total;
     public float winPercentThreshold;
     private Camera _camera;
+    public Image restartLevel;
 
     void FixedUpdate()
     {
@@ -92,11 +97,15 @@ public class TestUserDraw : MonoBehaviour
         {
             LevelLost(LostCause.NOT_ENOUGH_COVERAGE);
         }
+        
+        Destroy(gameObject);
     }
 
     private void LevelWon()
     {
         Debug.Log("LEVEL WON");
+        nextButton.gameObject.SetActive(true);
+        nextButton.enabled = true;
     }
 
     private void RemoveCrackPoint(Vector3 cementPoint)
@@ -112,14 +121,18 @@ public class TestUserDraw : MonoBehaviour
 
     private bool cementIsOk(Vector3 cementPosition, Vector3 crackPosition)
     {
-        cementRect.x = cementPosition.x;
-        cementRect.y = cementPosition.y;
-        return cementRect.Contains(crackPosition);
+        return Vector2.Distance(cementPosition, crackPosition) <= cementRadius;
+        // cementRect.x = cementPosition.x;
+        // cementRect.y = cementPosition.y;
+        // return cementRect.Contains((Vector2)crackPosition);
     }
 
+
+    public static List<GameObject> cements = new List<GameObject>();
     private void CreateCementAt(Vector3 cementPoint)
     {
-        Instantiate(cementPrefab, cementPoint, Quaternion.identity);
+        var go = Instantiate(cementPrefab, cementPoint, Quaternion.identity);
+        cements.Add(go);
     }
 
 
@@ -132,10 +145,13 @@ public class TestUserDraw : MonoBehaviour
     private void LevelLost(LostCause cause)
     {
         Debug.Log($"LEVEL LOST {cause}");
+        restartLevel.gameObject.SetActive(true);
+        restartLevel.enabled = true;
     }
 
-    private void PrepareCanvasForUnckracking()
+    private void HideWhatIsNeeded()
     {
+        DestroyImageOnCanvas(paperBackground);
         DestroyImageOnCanvas(drawPanelObject);
         DestroyCementLinesOnCanvas();
         DestroyImageOnCanvas(doneButton);
@@ -226,7 +242,6 @@ public class TestUserDraw : MonoBehaviour
         crackPoints = extractPoints(crackLines);
         cementPoints = extractPoints(cementLines);
         currentChecksCount = 0;
-        runCheck = true;
         elapsed = 0F;
         total = crackPoints.Count;
 
@@ -236,6 +251,14 @@ public class TestUserDraw : MonoBehaviour
         // printCementAndCrackPoints();
         currentCementPointNode = cementPoints.First;
 
-        PrepareCanvasForUnckracking();
+        HideWhatIsNeeded();
+        EnableObjectsForResults();
+        runCheck = true;
+    }
+
+    private void EnableObjectsForResults()
+    {
+        crackUI.gameObject.SetActive(true);
+        crackUI.enabled = true;
     }
 }

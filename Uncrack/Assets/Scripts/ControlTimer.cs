@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Timers;
-using TMPro;
-using UnityEditor.Rendering;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +11,6 @@ public class ControlTimer : MonoBehaviour
     // to enable
     public Image paper;
     public Image runButton;
-    public Image nextLevelButton;
     public Image paperBackground;
     
     // to disable
@@ -46,7 +41,7 @@ public class ControlTimer : MonoBehaviour
 
     private void DeactivateWhatIsNecessary()
     {
-        crackUI.gameObject.SetActive(true);
+        crackUI.gameObject.SetActive(false);
         crackUI.enabled = false;
     }
 
@@ -56,8 +51,6 @@ public class ControlTimer : MonoBehaviour
         paper.enabled = true;
         runButton.gameObject.SetActive(true);
         runButton.enabled = true;
-        nextLevelButton.gameObject.SetActive(true);
-        nextLevelButton.enabled = (true);
         paperBackground.gameObject.SetActive(true);
         paperBackground.enabled = true;
     }
