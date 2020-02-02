@@ -70,11 +70,25 @@ public class DrawLine : MonoBehaviour
         // Debug.Log("point: " + point);
         
         var r = drawPanel.rect;
+        var prev = r.position;
+        //Debug.Log("1pos: " + r.position);
         r.position = _camera.ScreenToWorldPoint(r.position);
+        //Debug.Log("2pos: " + r.position);
+
+        bool retVal =        point.x > r.x/2 &&
+                                     point.x < -r.x/2 &&
+                                     point.y < -r.y/2 &&
+                                     point.y > r.y/2 ;
+        //r.position = prev;
+        //Debug.Log("3pos: " + r.position);
+        //Debug.Log("mainPanel: " + drawPanel.rect.position);
+        return retVal;
         // Debug.Log("r: " + r);
+        /*
         return point.x > r.x/2 &&
                point.x < -r.x/2 &&
                point.y < -r.y/2 &&
                point.y > r.y/2 ;
+               */
     }
 }

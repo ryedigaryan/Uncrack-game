@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,7 @@ public class TestUserDraw : MonoBehaviour
 {
     
     private RectTransform drawPanelTransform;
+    public GameObject linePrefab;
     public GameObject cementPrefab;
     public GameObject drawPanelObject;
     public GameObject paperBackground;
@@ -13,6 +15,7 @@ public class TestUserDraw : MonoBehaviour
     public float cementRadius = 8;
     public Image nextButton;
     public Image shpaklee;
+    public TextMeshProUGUI coveragePercTxt;
 
     public SpriteRenderer crackUI;
 
@@ -26,6 +29,7 @@ public class TestUserDraw : MonoBehaviour
     {
         _camera = Camera.main;
         drawPanelTransform = (RectTransform) drawPanelObject.transform;
+        coveragePercTxt.text = $"0% / {winPercentThreshold}%";
     }
 
     public float checksPerSecond = 2;
@@ -77,6 +81,8 @@ public class TestUserDraw : MonoBehaviour
             RemoveCrackPoint(cementPoint);
         }
 
+        coveragePercTxt.text = $"{((int) getCoveragePercent())}% / {winPercentThreshold}%";
+
         currentChecksCount = nextChecksCount;
 
         if (currentCementPointNode == null) // all user drawn points are processed
@@ -116,7 +122,9 @@ public class TestUserDraw : MonoBehaviour
 
     private void CheckCementCoverage()
     {
-        float coveragePercent = 100 - (crackPoints.Count / (float) total * 100);
+        float coveragePercent = getCoveragePercent();
+        Debug.Log("prc: " + coveragePercent);
+        
         if (coveragePercent >= winPercentThreshold)
         {
             LevelWon();
@@ -127,6 +135,11 @@ public class TestUserDraw : MonoBehaviour
         }
         
         Destroy(gameObject);
+    }
+
+    private float getCoveragePercent()
+    {
+        return 100 - (crackPoints.Count / (float) total * 100);
     }
 
     private void LevelWon()
@@ -238,12 +251,12 @@ public class TestUserDraw : MonoBehaviour
         }
     }
 
-    LinkedList<Vector3> extractPoints(List<LineRenderer> lines)
+    LinkedList<Vector3> extractPoints(List<LineRenderer> lines, bool useWorldPosition)
     {
         var points = new LinkedList<Vector3>();
         foreach (var line in lines)
         {
-            var pointsOnLine = extractPoints(line);
+            var pointsOnLine = extractPoints(line, useWorldPosition);
             foreach (var pol in pointsOnLine)
             {
                 points.AddLast(pol);
@@ -253,7 +266,7 @@ public class TestUserDraw : MonoBehaviour
         return points;
     }
 
-    Vector3[] extractPoints(LineRenderer lr)
+    Vector3[] extractPoints(LineRenderer lr, bool useWorldPosition)
     {
         Vector3[] linePoints = new Vector3[lr.positionCount];
         lr.GetPositions(linePoints);
@@ -261,7 +274,15 @@ public class TestUserDraw : MonoBehaviour
         {
             var p = linePoints[i];
             p.z = 1;
-            p += lr.gameObject.transform.position;
+            if (useWorldPosition)
+            {
+                p += lr.gameObject.transform.position;
+            }
+            else
+            {
+                p += lr.gameObject.transform.localPosition;
+            }
+
             linePoints[i] = p;
         }
 
@@ -273,25 +294,36 @@ public class TestUserDraw : MonoBehaviour
     {
         cementLines = DrawLine.drawnLines;
 
-        crackPoints = extractPoints(crackLines);
-        cementPoints = extractPoints(cementLines);
+        crackPoints = extractPoints(crackLines, false);
+        cementPoints = extractPoints(cementLines, true);
         currentChecksCount = 0;
         elapsed = 0F;
         total = crackPoints.Count;
 
         ConvertToWorldPoint(crackPoints);
-        // printCementAndCrackPoints();
+         // printCementAndCrackPoints();
         InterpolateCementPoints();
         // printCementAndCrackPoints();
         currentCementPointNode = cementPoints.First;
 
         HideWhatIsNeeded();
         EnableObjectsForResults();
+        
+        
+        // foreach (var c in crackPoints)
+        // {
+        //     var go = Instantiate(linePrefab, c, Quaternion.identity);
+        //     go.name += "_CRACK";
+        //     cements.Add(go);
+        // }
+        
         runCheck = true;
     }
 
     private void EnableObjectsForResults()
     {
+        coveragePercTxt.gameObject.SetActive(true);
+        coveragePercTxt.enabled = true;
         crackUI.gameObject.SetActive(true);
         crackUI.enabled = true;
     }
