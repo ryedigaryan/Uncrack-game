@@ -1739,7 +1739,7 @@ MonoBehaviour:
   drawPanelObject: {fileID: 463355822}
   paperBackground: {fileID: 1041437675}
   doneButton: {fileID: 1503938466}
-  cementRadius: 1
+  cementRadius: 0.8
   nextButton: {fileID: 1406678040}
   shpaklee: {fileID: 351182582}
   coveragePercTxt: {fileID: 424798270}
@@ -2723,7 +2723,7 @@ MonoBehaviour:
   drawPanelObject: {fileID: 693964730}
   paperBackground: {fileID: 1055133331}
   doneButton: {fileID: 955325528}
-  cementRadius: 1
+  cementRadius: 0.8
   nextButton: {fileID: 274193994}
   shpaklee: {fileID: 842436758}
   coveragePercTxt: {fileID: 1627649045}
@@ -4814,7 +4814,7 @@ MonoBehaviour:
   drawPanelObject: {fileID: 1170842198}
   paperBackground: {fileID: 459060695}
   doneButton: {fileID: 112088725}
-  cementRadius: 0.7
+  cementRadius: 0.8
   nextButton: {fileID: 1386987833}
   shpaklee: {fileID: 1422795882}
   coveragePercTxt: {fileID: 483748820}
