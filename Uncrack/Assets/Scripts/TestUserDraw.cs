@@ -82,6 +82,7 @@ public class TestUserDraw : MonoBehaviour
         }
 
         coveragePercTxt.text = $"{((int) getCoveragePercent())}% / {winPercentThreshold}%";
+        Debug.Log("coverage: " + coveragePercTxt.text);
 
         currentChecksCount = nextChecksCount;
 
@@ -310,12 +311,13 @@ public class TestUserDraw : MonoBehaviour
         EnableObjectsForResults();
         
         
-        // foreach (var c in crackPoints)
-        // {
-        //     var go = Instantiate(linePrefab, c, Quaternion.identity);
-        //     go.name += "_CRACK";
-        //     cements.Add(go);
-        // }
+        // bugaga
+        foreach (var c in crackPoints)
+        {
+            var go = Instantiate(linePrefab, c, Quaternion.identity);
+            go.name += "_CRACK";
+            cements.Add(go);
+        }
         
         runCheck = true;
     }
